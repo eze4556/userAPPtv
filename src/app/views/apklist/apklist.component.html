@@ -68,6 +68,7 @@
       class="apk-item"
       [ngStyle]="{ 'background-image': 'url(' + apk.imagenUrl + ')' }"
       tabindex="0"
+      (click)="navigateToDetail(apk.id)"
     >
       <div class="apk-overlay">
         <ion-label class="apk-details">

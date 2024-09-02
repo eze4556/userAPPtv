@@ -7,12 +7,14 @@ import { Categoria } from './../../common/models/categoria.models';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';  // Asegúrate de importar FormsModule
+import { Router } from '@angular/router';
+
 
 
 @Component({
   selector: 'app-apk-list',
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],  // Asegúrate de que IonicModule esté aquí
+  imports: [IonicModule, CommonModule, FormsModule],
   templateUrl: './apklist.component.html',
   styleUrls: ['./apklist.component.scss'],
 })
@@ -26,7 +28,8 @@ export class ApkListComponent implements OnInit {
     private categoryFilter$ = new BehaviorSubject<string>('');
 
 
-  constructor(private firestoreService: FirestoreService) {}
+  constructor(private firestoreService: FirestoreService,private router: Router
+) {}
 
   ngOnInit() {
     this.apks$ = this.firestoreService.getApks();
@@ -37,6 +40,10 @@ export class ApkListComponent implements OnInit {
         filter ? apks.filter(apk => apk.categoriaId === filter) : apks
       )
     );
+  }
+
+  navigateToDetail(apkId: string) {
+    this.router.navigate(['/apk', apkId]);
   }
 
   filterApks() {

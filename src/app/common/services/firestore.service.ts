@@ -197,7 +197,16 @@ async deleteCategoria(id: string): Promise<void> {
   }
 
 
+async getApkById(id: string): Promise<Apk | undefined> {
+  const apkDocRef = doc(this.firestore, 'apks', id);
+  const apkDocSnap = await getDoc(apkDocRef);
 
+  if (apkDocSnap.exists()) {
+    return apkDocSnap.data() as Apk; // Devolver los datos como Apk
+  } else {
+    return undefined; // Documento no encontrado
+  }
+}
 
 
  // Obtener el documento del usuario

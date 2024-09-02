@@ -23,16 +23,16 @@ export const routes: Routes = [
     loadComponent: () => import('../../src/app/views/register/register.page').then(m => m.RegisterPage)
   },
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.ApkListComponent),
-  },
-  {
     path: 'home/:id',
-    loadComponent: () => import('./views/user-detail/user-detail.page').then((m) => m.UserDetailPage),
+    loadComponent: () => import('./home/home.page').then((m) => m.ApkListComponent),
   },
    {
     path: 'ver-usuario/:id',
     loadComponent: () => import('./views/ver-usuario/ver-usuario.component').then(m => m.VerUsuarioComponent)
+  },
+  {
+    path: 'apk/:id',
+    loadComponent: () => import('./home/home.page').then(m => m.ApkListComponent) // Ruta para detalle del APK
   },
   {
     path: '',

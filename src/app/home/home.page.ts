@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from '../../app/common/services/firestore.service';
 import { Apk } from '../../app/common/models/apk.model';
-import { Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-apk-list',
@@ -13,11 +15,19 @@ import { Observable } from 'rxjs';
   styleUrls: ['./home.page.scss'],
 })
 export class ApkListComponent implements OnInit {
-  apks$: Observable<Apk[]>;
+ apk$: Observable<Apk>;
 
-  constructor(private firestoreService: FirestoreService) {}
-
-  ngOnInit() {
-    this.apks$ = this.firestoreService.getApks();
+  constructor(
+    private route: ActivatedRoute,
+    private firestoreService: FirestoreService
+  ) {}
+ ngOnInit() {
+    const apkId = this.route.snapshot.paramMap.get('id');
+    if (apkId) {
+      // Convertir el Promise a Observable
+      this.apk$ = from(this.firestoreService.getApkById(apkId)).pipe(
+        map(apk => apk) // Pasar directamente el resultado
+      );
+    }
   }
 }
