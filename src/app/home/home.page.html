@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Lista de APKs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item
+      *ngFor="let apk of apks$ | async"
+      class="apk-item"
+      [ngStyle]="{ 'background-image': 'url(' + apk.imagenUrl + ')' }"
+      tabindex="0"
+    >
+      <div class="apk-overlay">
+        <ion-label class="apk-details">
+          <h2 style="font-size: 40px;">{{ apk.nombre }}</h2>
+          <p>{{ apk.descripcion }}</p>
+        </ion-label>
+        <ion-button fill="solid" color="primary" class="apk-button" [href]="apk.apkUrl" download="{{ apk.nombre }}.apk">
+          Descargar
+        </ion-button>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>
