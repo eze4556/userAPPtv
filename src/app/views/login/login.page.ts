@@ -49,7 +49,6 @@ constructor(
   async login() {
     if (this.loginForm.valid) {
       const { dni, password } = this.loginForm.value;
-
       try {
         const user = await this.firestoreService.loginUser(dni, password);
         if (user) {
@@ -59,7 +58,7 @@ constructor(
           await this.mostrarAlerta('Éxito', 'Inicio de sesión exitoso.');
 
           setTimeout(() => {
-            this.router.navigateByUrl('/lista');
+this.router.navigate(['/lista']);
           }, 1000);
         } else {
           this.loginError = true;
