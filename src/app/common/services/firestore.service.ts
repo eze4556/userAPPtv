@@ -202,11 +202,13 @@ async getApkById(id: string): Promise<Apk | undefined> {
   const apkDocSnap = await getDoc(apkDocRef);
 
   if (apkDocSnap.exists()) {
-    return apkDocSnap.data() as Apk; // Devolver los datos como Apk
+    return apkDocSnap.data() as Apk;
   } else {
-    return undefined; // Documento no encontrado
+    return undefined;
   }
 }
+
+
 
 
  // Obtener el documento del usuario

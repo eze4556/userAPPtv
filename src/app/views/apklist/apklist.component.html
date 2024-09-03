@@ -68,15 +68,17 @@
       class="apk-item"
       [ngStyle]="{ 'background-image': 'url(' + apk.imagenUrl + ')' }"
       tabindex="0"
-      (click)="navigateToDetail(apk.id)"
     >
+      <!-- (click)="navigateToDetail(apk.id)" -->
       <div class="apk-overlay">
         <ion-label class="apk-details">
           <h2>{{ apk.nombre }}</h2>
         </ion-label>
-        <ion-button fill="solid" color="primary" class="apk-button" [href]="apk.apkUrl" download="{{ apk.nombre }}.apk">
-          Descargar
-        </ion-button>
+        <ion-button (click)="downloadApk(apk.apkUrl)" class="download-button">
+  Descargar APK
+</ion-button>
+
+
       </div>
     </ion-item>
   </ion-list>

@@ -1,4 +1,4 @@
-import { IonicModule } from '@ionic/angular';
+import { IonicModule,Platform } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from '../../common/services/firestore.service';
@@ -8,13 +8,21 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';  // Asegúrate de importar FormsModule
 import { Router } from '@angular/router';
+import { Browser } from '@capacitor/browser';
+
+
+import { File } from '@awesome-cordova-plugins/file/ngx'; // Importa File
+import { HttpClient, HttpClientModule } from '@angular/common/http'; // Importa HttpClient
+
+import { Filesystem, Directory, Encoding, FilesystemEncoding } from '@capacitor/filesystem';
+
 
 
 
 @Component({
   selector: 'app-apk-list',
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule, FormsModule,HttpClientModule],
   templateUrl: './apklist.component.html',
   styleUrls: ['./apklist.component.scss'],
 })
@@ -28,7 +36,9 @@ export class ApkListComponent implements OnInit {
     private categoryFilter$ = new BehaviorSubject<string>('');
 
 
-  constructor(private firestoreService: FirestoreService,private router: Router
+  constructor(private firestoreService: FirestoreService,private router: Router, private file: File,  // Inyecta File
+    private http: HttpClient, // Inyecta HttpClient
+    private platform: Platform  // Inyecta Platform
 ) {}
 
   ngOnInit() {
@@ -49,4 +59,23 @@ export class ApkListComponent implements OnInit {
   filterApks() {
     this.categoryFilter$.next(this.selectedCategory);
   }
+
+ async downloadApk(url: string) {
+    if (this.platform.is('android') && this.isAndroidTV()) {
+      try {
+        // Abre el enlace en el navegador del dispositivo
+        await Browser.open({ url });
+      } catch (error) {
+        console.error('Error al abrir el navegador:', error);
+      }
+    } else {
+      console.warn('Este proceso de descarga es solo para Android TV.');
+    }
+  }
+
+  isAndroidTV(): boolean {
+    return this.platform.is('android') && (navigator.userAgent.includes('TV') || navigator.userAgent.includes('AFT'));
+  }
+
+
 }
