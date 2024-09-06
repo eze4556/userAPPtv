@@ -68,5 +68,4 @@ export class ApkListComponent implements OnInit {
     window.open(apkUrl, '_blank');
   }
 
-
 }
