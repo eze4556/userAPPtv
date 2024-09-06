@@ -9,12 +9,15 @@ import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';  // Asegúrate de importar FormsModule
 import { Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+
 
 
 import { File } from '@awesome-cordova-plugins/file/ngx'; // Importa File
 import { HttpClient, HttpClientModule } from '@angular/common/http'; // Importa HttpClient
 
-import { Filesystem, Directory, Encoding, FilesystemEncoding } from '@capacitor/filesystem';
+
+
 
 
 
@@ -60,21 +63,9 @@ export class ApkListComponent implements OnInit {
     this.categoryFilter$.next(this.selectedCategory);
   }
 
- async downloadApk(url: string) {
-    if (this.platform.is('android') && this.isAndroidTV()) {
-      try {
-        // Abre el enlace en el navegador del dispositivo
-        await Browser.open({ url });
-      } catch (error) {
-        console.error('Error al abrir el navegador:', error);
-      }
-    } else {
-      console.warn('Este proceso de descarga es solo para Android TV.');
-    }
-  }
-
-  isAndroidTV(): boolean {
-    return this.platform.is('android') && (navigator.userAgent.includes('TV') || navigator.userAgent.includes('AFT'));
+ // Función para descargar el APK
+  downloadApk(apkUrl: string): void {
+    window.open(apkUrl, '_blank');
   }
 
 

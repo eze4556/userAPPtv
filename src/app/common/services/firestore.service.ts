@@ -208,6 +208,12 @@ async getApkById(id: string): Promise<Apk | undefined> {
   }
 }
 
+// Obtener la URL de descarga de un APK específico
+async getApkDownloadUrl(apkId: string): Promise<string | undefined> {
+  const apk = await this.getApkById(apkId);
+  return apk?.apkUrl;
+}
+
 
 
 

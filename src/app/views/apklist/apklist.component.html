@@ -62,24 +62,12 @@
     </ion-select>
   </ion-item>
 
-  <ion-list>
-    <ion-item
-      *ngFor="let apk of apks$ | async"
-      class="apk-item"
-      [ngStyle]="{ 'background-image': 'url(' + apk.imagenUrl + ')' }"
-      tabindex="0"
-    >
-      <!-- (click)="navigateToDetail(apk.id)" -->
-      <div class="apk-overlay">
-        <ion-label class="apk-details">
-          <h2>{{ apk.nombre }}</h2>
-        </ion-label>
-        <ion-button (click)="downloadApk(apk.apkUrl)" class="download-button">
-  Descargar APK
-</ion-button>
+ <!-- Listar APKs con un botón de descarga -->
+<div *ngFor="let apk of apks$ | async">
+  <h3>{{ apk.nombre }}</h3>
+  <img [src]="apk.imagenUrl" alt="Imagen de {{ apk.nombre }}">
+  <p>{{ apk.descripcion }}</p>
+  <button (click)="downloadApk(apk.apkUrl)">Descargar</button>
+</div>
 
-
-      </div>
-    </ion-item>
-  </ion-list>
 </ion-content>
