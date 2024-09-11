@@ -17,12 +17,26 @@ import {
   query,
   where,
 } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
+import { Storage, ref, uploadBytes, getDownloadURL,getStorage } from '@angular/fire/storage';
+import { lastValueFrom, Observable } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { Categoria } from '../models/categoria.models';
 import { Apk } from '../models/apk.model';
 import { UserI } from '../models/users.models';
+
+
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { HttpClient } from '@angular/common/http';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { Platform } from '@ionic/angular';
+
+
+
+import { Capacitor, Plugins } from '@capacitor/core';
+const { PermissionsPlugin } = Plugins;
+
+
+
 
 
 // Convertidor genérico para Firestore
@@ -44,7 +58,8 @@ export class FirestoreService {
     private storage: Storage = inject(Storage); // Inyectar el servicio de Storage
 
 
-  constructor() { }
+  constructor(private http: HttpClient,private file: File,    private platform: Platform
+) { }
 
   getFirestoreInstance(): Firestore {
     return this.firestore;
@@ -149,47 +164,13 @@ async deleteCategoria(id: string): Promise<void> {
 
 
 
-  // Función para subir un archivo (imagen o APK) y obtener la URL
-  async uploadFile(file: File, path: string): Promise<string> {
-    const storageRef = ref(this.storage, path);
-    await uploadBytes(storageRef, file);
-    return getDownloadURL(storageRef);
-  }
-
-  // Crear un APK
-  async createApk(apk: Apk, apkFile: File, imageFile?: File): Promise<void> {
-    if (imageFile) {
-      const imagePath = `apks/images/${apk.nombre}_${uuidv4()}`; // Ruta donde se guardará la imagen
-      apk.imagenUrl = await this.uploadFile(imageFile, imagePath); // Subir imagen y obtener URL
-    }
-
-    const apkPath = `apks/files/${apk.nombre}_${uuidv4()}`; // Ruta donde se guardará el archivo APK
-    apk.apkUrl = await this.uploadFile(apkFile, apkPath); // Subir APK y obtener URL
-
-    apk.fechaCreacion = new Date(); // Establece la fecha de creación
-    const id = this.createIdDoc(); // Genera un id único para el APK
-    await this.createDocument<Apk>(apk, `apks/${id}`);
-  }
 
   // Obtener los APKs
   getApks(): Observable<Apk[]> {
     return this.getCollectionChanges<Apk>('apks');
   }
 
-  // Actualizar un APK
-  async updateApk(id: string, apk: Partial<Apk>, apkFile?: File, imageFile?: File): Promise<void> {
-    if (imageFile) {
-      const imagePath = `apks/images/${apk.nombre}_${uuidv4()}`; // Nueva ruta de imagen
-      apk.imagenUrl = await this.uploadFile(imageFile, imagePath); // Subir nueva imagen y obtener URL
-    }
 
-    if (apkFile) {
-      const apkPath = `apks/files/${apk.nombre}_${uuidv4()}`; // Nueva ruta de archivo APK
-      apk.apkUrl = await this.uploadFile(apkFile, apkPath); // Subir nuevo APK y obtener URL
-    }
-
-    await this.updateDocument<Apk>(apk, 'apks', id);
-  }
 
   // Eliminar un APK
   async deleteApk(id: string): Promise<void> {
@@ -208,15 +189,25 @@ async getApkById(id: string): Promise<Apk | undefined> {
   }
 }
 
-// Obtener la URL de descarga de un APK específico
-async getApkDownloadUrl(apkId: string): Promise<string | undefined> {
-  const apk = await this.getApkById(apkId);
-  return apk?.apkUrl;
-}
+// Obtener URL de descarga del APK
+  getApkDownloadUrl(apkPath: string): Promise<string> {
+    const apkRef = ref(this.storage, apkPath);
+    return getDownloadURL(apkRef);
+  }
 
 
 
 
+ // Método para descargar el APK
+  descargarAPK(apkUrl: string) {
+    // Se crea un enlace invisible en la página para descargar el archivo
+    const link = document.createElement('a');
+    link.href = apkUrl;
+    link.download = 'app.apk';  // Nombre del archivo APK
+    link.click();  // Simula el clic para iniciar la descarga
+  }
+
+  
  // Obtener el documento del usuario
   public async getDocumentById<T>(collectionPath: string, documentId: string): Promise<DocumentData | undefined> {
     try {
@@ -273,6 +264,10 @@ async getApkDownloadUrl(apkId: string): Promise<string | undefined> {
       throw error;
     }
   }
-
-
 }
+
+
+
+
+
+

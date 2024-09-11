@@ -8,6 +8,8 @@ import { Categoria } from './../../common/models/categoria.models';
 import { Observable } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
+
+
 @Component({
   selector: 'app-apk',
   standalone: true,
@@ -67,51 +69,51 @@ nombreApk: string = '';
     }
   }
 
-  async subirApk() {
-    if (!this.apkArchivo) {
-      this.mostrarToast('Debe seleccionar un archivo APK', 'danger');
-      return;
-    }
+//   async subirApk() {
+//     if (!this.apkArchivo) {
+//       this.mostrarToast('Debe seleccionar un archivo APK', 'danger');
+//       return;
+//     }
 
-    const id = uuidv4();
-   const apkData: {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  categoriaId: string | null;
-  fechaCreacion: Date;
-  imagenUrl?: string;  // Propiedad opcional
-  apkUrl?: string;     // Propiedad opcional
-} = {
-  id,
-  nombre: this.nombreApk,
-  descripcion: this.descripcionApk,
-  categoriaId: this.categoriaSeleccionada,
-  fechaCreacion: new Date(),
-};
+//     const id = uuidv4();
+//    const apkData: {
+//   id: string;
+//   nombre: string;
+//   descripcion: string;
+//   categoriaId: string | null;
+//   fechaCreacion: Date;
+//   imagenUrl?: string;
+//   apkUrl?: string;
+// } = {
+//   id,
+//   nombre: this.nombreApk,
+//   descripcion: this.descripcionApk,
+//   categoriaId: this.categoriaSeleccionada,
+//   fechaCreacion: new Date(),
+// };
 
-    try {
-     // Asignación de propiedades dinámicas
-if (this.imagenArchivo) {
-  const imagenUrl = await this.FirestoreService.uploadFile(this.imagenArchivo, `imagenes/${id}`);
-  apkData.imagenUrl = imagenUrl;  // No más errores aquí
-}
+//     try {
 
-const apkUrl = await this.FirestoreService.uploadFile(this.apkArchivo, `apks/${id}`);
-apkData.apkUrl = apkUrl;
+// if (this.imagenArchivo) {
+//   const imagenUrl = await this.FirestoreService.uploadFile(this.imagenArchivo, `imagenes/${id}`);
+//   apkData.imagenUrl = imagenUrl;
+// }
 
-      await this.FirestoreService.createDocument(apkData, `apks/${id}`);
-      this.mostrarToast('APK subido exitosamente', 'success');
-      this.nombreApk = '';
-      this.descripcionApk = '';
-      this.imagenArchivo = null;
-      this.apkArchivo = null;
-      this.cargarApks(); // Recargar la lista de APKs después de subir
-    } catch (error) {
-      console.error('Error al subir el APK:', error);
-      this.mostrarToast('Error al subir el APK', 'danger');
-    }
-  }
+// const apkUrl = await this.FirestoreService.uploadFile(this.apkArchivo, `apks/${id}`);
+// apkData.apkUrl = apkUrl;
+
+//       await this.FirestoreService.createDocument(apkData, `apks/${id}`);
+//       this.mostrarToast('APK subido exitosamente', 'success');
+//       this.nombreApk = '';
+//       this.descripcionApk = '';
+//       this.imagenArchivo = null;
+//       this.apkArchivo = null;
+//       this.cargarApks();
+//     } catch (error) {
+//       console.error('Error al subir el APK:', error);
+//       this.mostrarToast('Error al subir el APK', 'danger');
+//     }
+//   }
 
   async borrarApk(apkId: string) {
     try {

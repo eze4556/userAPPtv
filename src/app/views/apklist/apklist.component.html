@@ -52,7 +52,7 @@
 <br>
 
 <ion-content>
-  <ion-item>
+  <!-- <ion-item>
     <ion-label>Categoría</ion-label>
     <ion-select [(ngModel)]="selectedCategory" (ionChange)="filterApks()">
       <ion-select-option value="">Todas</ion-select-option>
@@ -60,14 +60,18 @@
         {{ categoria.nombre }}
       </ion-select-option>
     </ion-select>
-  </ion-item>
+  </ion-item> -->
 
- <!-- Listar APKs con un botón de descarga -->
-<div *ngFor="let apk of apks$ | async">
-  <h3>{{ apk.nombre }}</h3>
-  <img [src]="apk.imagenUrl" alt="Imagen de {{ apk.nombre }}">
-  <p>{{ apk.descripcion }}</p>
-  <button (click)="downloadApk(apk.apkUrl)">Descargar</button>
-</div>
+<ion-list>
+    <ion-item *ngFor="let apk of filteredApks$ | async">
+      <ion-label>
+        <h2>{{ apk.nombre }}</h2>
+        <p>{{ apk.descripcion }}</p>
+      </ion-label>
+      <ion-button (click)="downloadAPK(apk.apkUrl)" color="primary">
+        Descargar APK
+      </ion-button>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
